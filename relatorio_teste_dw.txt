@@ -1,0 +1,69 @@
+Teste do painel contra o DW — 11/10/2026 22:58:47
+Banco: localhost:5432/dw_sienge  |  schema lido: suprimentos
+
+── 1. Conexão ────────────────────────────────────────────────────────────
+  [OK]    conectado como dw_admin — PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on x86_64-pc-linux-gnu
+
+── 2. Estrutura do schema suprimentos (x modelos do painel) ──────────────
+  [OK]    dim_centro_custo: 12 colunas
+  [OK]    dim_comprador: 2 colunas
+  [OK]    dim_fornecedor: 6 colunas
+  [OK]    dim_insumo: 15 colunas
+  [OK]    dim_pedido: 31 colunas
+  [OK]    dim_status_pedido: 3 colunas
+  [OK]    fato_pedido_compra_item: 38 colunas
+  [OK]    views: ['vw_itens_pedido']
+
+── 3. Volumes e qualidade dos dados ──────────────────────────────────────
+  pedidos        10886
+  itens          37716
+  insumos        12686
+  fornecedores   1276
+  obras          168
+  data_ini       2026-01-02
+  data_fim       2026-10-09
+  ultima_carga   2026-10-11 22:22:37
+  [OK]    itens com preço válido p/ saving: 36,232 de 37,716 (96.1%)
+  preço zerado: 0 | cancelados: 1,484 | sem fornecedor: 0
+  gasto total (itens válidos): R$ 210,979,983.97
+  [OK]    centros de custo sem cadastro (aparecem só com o código): 0
+  [AVISO] fornecedores sem nome (credores.csv desatualizado?): 71
+  [AVISO] categorias: 74 | itens SEM CATEGORIA: 357
+  top 10 categorias por gasto:
+    MISTURAS USINADAS                                31 insumos  R$    32,112,804.63
+    FERRAGENS                                       307 insumos  R$    21,978,555.49
+    INSTALAÇÕES ELÉTRICAS-TELEFÔNICAS              2341 insumos  R$    19,662,643.95
+    AGREGADOS E AGLOMERANTES                        113 insumos  R$    18,331,080.35
+    REVESTIMENTO                                    255 insumos  R$    12,768,279.15
+    ARTEFATOS PREMOLDADOS                           136 insumos  R$     8,192,976.06
+    ALIMENTACAO                                     124 insumos  R$     6,593,356.77
+    ESQUADRIAS METALICAS                            237 insumos  R$     6,587,178.75
+    PAVIMENTAÇÃO E DRENAGEM                         126 insumos  R$     5,911,726.58
+    INSTAL.HIDRAULICA                               959 insumos  R$     5,432,552.21
+  [AVISO] 390 insumos sem grupo no de-para (categoria = prefixo do código Sienge)
+  unidades: un=9985, m=818, par=274, kg=228, m2=210, l=152, gl=109, sc=105, mes=90, cx=90, rl=86, vb=82
+
+── 4. Teste funcional (busca por similaridade + saving) ──────────────────
+  [OK]    índice carregado: 12,497 insumos com compra, 74 categorias (0.3s)
+  [OK]    “Concreto Usinado 30 MPA” em MISTURAS USINADAS → 7 similares (26 ms), 7 na unidade m3
+        gasto R$ 19,918,561.49 | médio pond. R$ 661.7605 | menor R$ 597.0000 | maior R$ 701.0000
+        1 fornec. · 7 obras · 7 pedidos | saving (menor do mês) R$ 5,845.56 (0.0%) | 20 ms
+        top 5 similares: Concreto Usinado 30 MPA (100%) | CONCRETO USINADO 30 MPA AUTOADENSAVEL -  (64%) | CONCRETO USINADO 30 MPA AUTOADENSAVEL -  (63%) | CONCRETO USINADO 30 MPA AUTOADENSAVEL -  (62%) | CONCRETO USINADO 30 MPA AUTOADENSAVEL- V (53%)
+  [OK]    “IM - TELA SOLDADA” em FERRAGENS → 19 similares (59 ms), 19 na unidade un
+        gasto R$ 6,825,287.72 | médio pond. R$ 203.8982 | menor R$ 4.0596 | maior R$ 7,200.0000
+        14 fornec. · 24 obras · 47 pedidos | saving (menor do mês) R$ 2,817,752.83 (41.3%) | 23 ms
+        top 5 similares: IM - TELA SOLDADA NERVURADA - Q113 - 2,4 (65%) | TELA (47%) | TELA SOLDADA NERVURADA Q92 2,45X6M (43%) | TELA SOLDADA NERVURADA Q138 2,45X6M (43%) | TELA SOLDADA NERVURADA Q166 2,45X6M (42%)
+  [OK]    “ALMOÇO” em ALIMENTACAO → 3 similares (23 ms), 3 na unidade un
+        gasto R$ 3,291,689.00 | médio pond. R$ 13.3114 | menor R$ 1.3200 | maior R$ 6,631.0000
+        15 fornec. · 17 obras · 29 pedidos | saving (menor do mês) R$ 291,044.75 (8.8%) | 27 ms
+        top 5 similares: ALMOÇO (100%) | ALMOÇO (100%) | ALMOÇO - ALMOÇO/CAMPO (80%)
+
+── 5. Schema painel (Alembic) ────────────────────────────────────────────
+  [AVISO] schema painel não existe — rode: alembic upgrade head
+
+── 6. Dados mockup ───────────────────────────────────────────────────────
+  [OK]    nenhum schema de mock no banco
+  [OK]    o .env aponta para DW_SCHEMA=suprimentos
+
+── Resultado ─────────────────────────────────────────────────────────────
+TUDO OK

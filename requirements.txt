@@ -1,0 +1,16 @@
+# Painel de Suprimentos (Dash) — consome o DW dw_sienge (schema suprimentos)
+pandas>=3.0
+numpy>=2.3
+SQLAlchemy>=2.0.40
+psycopg[binary]>=3.2.10
+alembic>=1.16
+python-dotenv>=1.1
+dash>=3.2
+dash-bootstrap-components>=2.0
+dash-ag-grid>=32.3
+plotly>=6.3
+scikit-learn>=1.7
+rapidfuzz>=3.13
+pytest>=8.4
+reportlab>=4.2          # exportação PDF das janelas de decomposição
+python-pptx>=1.0         # botão 'Gerar relatório' (PowerPoint)
